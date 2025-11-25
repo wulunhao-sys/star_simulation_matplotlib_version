@@ -1,7 +1,6 @@
 # physics_engine.py - 纯物理计算，不涉及任何动画
 import numpy as np
 from typing import List, Dict,Tuple
-
 from src.simulation_data import SimulationState
 
 """原则：尽量以天体id代替天体索引进行遍历查找"""
@@ -21,7 +20,6 @@ class PhysicsEngine:
         frame = 0
 
         for i in range(num_bodies):
-            # 创建天体状态
             mass = np.random.uniform(params['min_mass'], params['max_mass'])
             if params['center_mass'] and i == 0:
                 mass = params['center_mass_num']
@@ -139,7 +137,7 @@ class PhysicsEngine:
                 body_i = bodies[i]
                 body_j = bodies[j]
                 if i != j:
-                    dr = body_i['position'] - body_j['position']
+                    dr = body_j['position'] - body_i['position']
                     distance = np.linalg.norm(dr)+2 # 加1是为了防止除以0
                     force_magnitude = self.G * body_j['mass'] / (distance ** 2)
                     acceleration += force_magnitude * dr / distance

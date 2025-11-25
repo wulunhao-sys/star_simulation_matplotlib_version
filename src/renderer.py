@@ -22,7 +22,7 @@ class Renderer:
         star_y = np.random.uniform(*RENDERER_PARAMS['axe_y_lim'], num_stars)
         star_sizes = np.random.uniform(0.5, 3, num_stars)
         star_alpha = np.random.uniform(0.4, 1, num_stars)
-        self.ax.scatter(star_x, star_y, s=star_sizes, c='white', alpha=star_alpha)
+        self.ax.scatter(star_x, star_y, s=star_sizes, c='white', alpha=star_alpha,zorder = 15-self.layer)
         self.graphics = []  # 真实天体对象
 
 
@@ -79,6 +79,9 @@ class Renderer:
         idx = min(int(ratio * 6), 5)  # 6个颜色段
         inner_color = np.array(RENDERER_PARAMS['inner_color'][idx])
         outer_color = np.array(RENDERER_PARAMS['outer_color'][idx])
+        if body['id'] == 0 and SIMULATION_PARAMS['center_mass']:
+            inner_color = np.array([0.0, 0.0, 0.0])      # 绝对纯黑（视界）
+            outer_color = outer_color = np.array([0.40, 0.02, 0.02])    # 深紫红吸积盘辉光（最经典的黑洞颜色）
 
         for layer in range(self.layer):
             current_radius = (layer + 1) * radius / self.layer

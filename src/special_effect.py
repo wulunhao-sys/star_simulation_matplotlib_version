@@ -16,7 +16,7 @@ class SpecialEffect:
     def create_remove_effect(self, remove_id, state,fused_pair):
         for rid in remove_id:
             body = state.get_body(rid)
-            circles = self._create_circles(body['position'], body['radius'], body['mass'])
+            circles = self._create_circles(body['position'], body['radius'], body['mass'],rid)
             for pair in fused_pair:
                 if rid == pair[0]:
                     who_to_eat = pair[1]
@@ -38,7 +38,7 @@ class SpecialEffect:
                 self.renderer.hide_body(fid)
             old_body = old_state.get_body(fid)
             new_body = new_state.get_body(fid)
-            circles = self._create_circles(old_body['position'], old_body['radius'], old_body['mass'])
+            circles = self._create_circles(old_body['position'], old_body['radius'], old_body['mass'],fid)
             self.fusion_effect.append({
                 'circles': circles,
                 'id':fid,
@@ -49,24 +49,26 @@ class SpecialEffect:
                 'frame': 0
             })
 
-    def _create_circles(self, pos, radius, mass):
+    def _create_circles(self, pos, radius, mass,id):
         circles = []
         ratio = np.clip((mass - SIMULATION_PARAMS['min_mass']) / (SIMULATION_PARAMS['max_mass'] - SIMULATION_PARAMS['min_mass'] + 1e-6), 0, 1)
         idx = min(int(ratio * 6), 5)
         inner = np.array(RENDERER_PARAMS['inner_color'][idx])
         outer = np.array(RENDERER_PARAMS['outer_color'][idx])
-
+        if SIMULATION_PARAMS['center_mass'] and id == 0:
+            inner = np.array([0.0, 0.0, 0.0])
+            outer = outer_color = np.array([0.40, 0.02, 0.02])
         for layer in range(self.layer):
-            r = (layer + 1) * radius / self.layer
-            t = layer / (self.layer - 1) if self.layer > 1 else 0
-            color = (1 - t) * inner + t * outer
-            if layer == 0:
-                circle = plt.Circle(pos, r, color=color, ec='none', zorder=20)
-            else:
-                lw = 1.5 + 28 * (r / radius)
-                circle = plt.Circle(pos, r, color=color, fill=False, linewidth=lw, ec=color, zorder=19 - layer)
-            self.ax.add_patch(circle)
-            circles.append(circle)
+                r = (layer + 1) * radius / self.layer
+                t = layer / (self.layer - 1) if self.layer > 1 else 0
+                color = (1 - t) * inner + t * outer
+                if layer == 0:
+                    circle = plt.Circle(pos, r, color=color, ec='none', zorder=20)
+                else:
+                    lw = 1.5 + 28 * (r / radius)
+                    circle = plt.Circle(pos, r, color=color, fill=False, linewidth=lw, ec=color, zorder=19 - layer)
+                self.ax.add_patch(circle)
+                circles.append(circle)
         return circles
 
     def update_remove_effect(self):

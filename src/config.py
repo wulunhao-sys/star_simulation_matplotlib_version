@@ -2,12 +2,12 @@
 
 SIMULATION_PARAMS = {
     'num_bodies': 10,
-    'G': -4.0,
+    'G': 4,
     'total_time': 10,
     'dt': 0.05,
-    'max_velocity': 3,
+    'max_velocity': 5,
     'center_mass': True,
-    'center_mass_num':1000,
+    'center_mass_num':3000,
     'min_mass':10,
     'max_mass':1000,
     'x_lim':50,
