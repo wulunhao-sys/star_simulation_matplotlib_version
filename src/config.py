@@ -1,8 +1,8 @@
 #基本配置文件，规定一些不在GUI界面可修改的参数，使用者可在此界面修改更细化的参数
 
 SIMULATION_PARAMS = {
-    'num_bodies': 10,
-    'G': 4,
+    'num_bodies': 20,
+    'G': 2,
     'total_time': 10,
     'dt': 0.05,
     'max_velocity': 5,
